@@ -29,7 +29,7 @@ Link = can.Model({
 Link.distributors = {
   youtube: {
     // NOTE: This regex should be improved!
-    regex: RegExp("(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch[?]v=|youtu\.be\/)(.*)"),
+    regex: RegExp("(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch[?]v=|youtu\.be\/)([a-zA-Z0-9]+)(?:&.*)?"),
     getEmbeddedLink: function(matches) {
       return "//www.youtube.com/embed/"+matches[1];
     },
@@ -39,7 +39,9 @@ Link.distributors = {
         url: 'https://gdata.youtube.com/feeds/api/videos/'+matches[1]+'?v=2&alt=json',
         async: false,
         success: function(data) {
-          retVal = data.entry.title.$t;
+          if(data.entry) {
+            retVal = data.entry.title.$t;
+          }
         }
       });
       return retVal;
