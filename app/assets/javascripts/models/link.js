@@ -29,7 +29,7 @@ Link = can.Model({
 Link.distributors = {
   youtube: {
     // NOTE: This regex should be improved!
-    regex: RegExp("(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch[?]v=|youtu\.be\/)([a-zA-Z0-9]+)(?:&.*)?"),
+    regex: RegExp("(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch[?]v=|youtu\.be\/)([a-zA-Z0-9\-_]+)(?:&.*)?"),
     getEmbeddedLink: function(matches) {
       return "//www.youtube.com/embed/"+matches[1];
     },
