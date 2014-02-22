@@ -1,0 +1,13 @@
+<ul class="list-group">
+  {{#links}}
+    <li class="not-loaded link list-group-item">
+      <span class="text">{{name}}</span>
+      <div class="loading-wrapper">
+        <img src="loader.gif">
+      </div>
+      <div class="iframe-wrapper">
+        <iframe width="320" height="240" data-src="{{embedded_link}}" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </li>
+  {{/links}}
+</ul>

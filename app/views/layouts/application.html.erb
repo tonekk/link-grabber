@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Link Grabber</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <div id="main" class="container">
+    <div id="main-inner">
+      <%= yield %>
+    </div>
+    <%= render partial: "shared/footer" %>
+  </div>
+
+</body>
+</html>
