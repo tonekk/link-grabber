@@ -20,8 +20,8 @@ Grabber = can.Control({
 
   // shows that input is empty
   displayEmpty: function() {
-    $('#grabber .is-valid').removeClass('glyphicon-off glyphicon-ok')
-                            .addClass('glyphicon-remove');
+    $('#grabber .is-valid').removeClass('glyphicon-remove glyphicon-ok')
+                            .addClass('glyphicon-off');
     this.toggleSaveButton(false);
   },
 
