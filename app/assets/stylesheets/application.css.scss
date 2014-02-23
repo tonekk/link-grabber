@@ -24,7 +24,7 @@ hr {
 
 #main {
   min-height: 100%;
-  padding-bottom: 25px;
+  padding-bottom: 30px;
   position: relative;
 }
 
@@ -40,7 +40,7 @@ hr {
 
 div#main-inner {
   margin: 0 auto;
-  margin-top: 120px;
+  margin-top: 60px;
   width: 420px;
   background-color: #eee;
   padding: 10px 20px 20px 20px;
@@ -80,6 +80,10 @@ div#main-inner {
 #grabber {
   margin-top: 20px;
 
+  border: 2px solid $borderColor;
+  border-radius: 4px;
+  padding: 20px;
+
   button.save {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -95,3 +99,38 @@ div#main-inner {
   }
 }
 
+img.logo {
+  border-radius: 50%;
+  border: 3px solid $borderColor;
+  opacity: 0.7
+}
+
+.logo-wrapper {
+  position: fixed;
+  padding: 20px;
+  border-radius: 100px 15px;
+  background-color: #eee;
+  border: 1px solid $borderColor;
+}
+
+.logo-wrapper#sc {
+  top: 40px;
+  left: 20px;
+}
+
+.logo-wrapper#yt {
+  top: 40px;
+  right: 20px;
+}
+
+@media(max-width: 920px) {
+  .logo-wrapper {
+    display: none;
+  }
+}
+
+@media(max-width: 420px) {
+  #main-inner {
+    width: 100%!important;
+  }
+}
