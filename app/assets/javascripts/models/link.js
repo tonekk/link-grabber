@@ -7,6 +7,8 @@ Link = can.Model({
   destroy: 'DELETE /links/{id}'
 }, {
 
+  // Checks for link validity
+  // also starts completion process, if validity check succeeds
   isValid: function() {
     // Iterate trough all distributors and check for a regex match
     // then add embedded link to object
@@ -15,14 +17,20 @@ Link = can.Model({
         distributor = Link.distributors[key];
         res = this.link.match(distributor.regex);
         if(res) {
-          this.attr('embedded_link', distributor.getEmbeddedLink(res));
-          this.attr('name', distributor.getName(res));
+          this.matches = res;
+          this.distributor = distributor;
           return true;
         }
       }
     }
     return false;
   },
+
+  // Get embedded link & name
+  fetchData: function(matches, distributor) {
+    this.distributor.getEmbeddedLink(this.matches);
+    this.distributor.getName(this.matches);
+  }
 });
 
 // Distributors of links that we want to add
@@ -31,20 +39,43 @@ Link.distributors = {
     // NOTE: This regex should be improved!
     regex: RegExp("(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch[?]v=|youtu\.be\/)([a-zA-Z0-9\-_]+)(?:&.*)?"),
     getEmbeddedLink: function(matches) {
-      return "//www.youtube.com/embed/"+matches[1];
+      LinkGrabber.grabber.currentLink.attr('embedded_link', "//www.youtube.com/embed/"+matches[1]);
     },
     getName: function(matches) {
-      var retVal = "";
       $.ajax({
         url: 'https://gdata.youtube.com/feeds/api/videos/'+matches[1]+'?v=2&alt=json',
-        async: false,
+        // This is the real validity check
         success: function(data) {
           if(data.entry) {
-            retVal = data.entry.title.$t;
+            LinkGrabber.grabber.currentLink.attr('name', retVal = data.entry.title.$t);
           }
+        },
+        error: function() {
+          LinkGrabber.grabber.handleWrongLink('Youtube API says: Not a valid youtube link!');
         }
       });
-      return retVal;
+    }
+  },
+
+  soundcloud: {
+    // NOTE: This regex should be improved!
+    regex: RegExp("((?:https?:)?\/\/(?:www\.)?(?:soundcloud\.com\/)[a-zA-Z0-9\-_\/]+)"),
+    // Actually we get both name and embedded link here
+    // so we only have to request SC API once.
+    getEmbeddedLink: function(matches) {
+      var retVal = "";
+      SC.get('/resolve', { url: matches[1] }, function(track, error) {
+        // This is the real validity check
+        if(!error) {
+          LinkGrabber.grabber.currentLink.attr('embedded_link', "https://w.soundcloud.com/player/?url="+encodeURIComponent(track.uri));;
+          LinkGrabber.grabber.currentLink.attr('name', track.title);;
+        }
+        else {
+          LinkGrabber.grabber.handleWrongLink('Souncloud API says: Not a valid soundcloud link!');
+        }
+      });
+    },
+    getName: function(matches) {
     }
   }
 };

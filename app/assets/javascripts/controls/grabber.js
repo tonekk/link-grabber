@@ -8,7 +8,6 @@ Grabber = can.Control({
   displayValid: function() {
     $('#grabber .is-valid').removeClass('glyphicon-off glyphicon-remove')
                             .addClass('glyphicon-ok');
-    this.toggleSaveButton(true);
   },
 
   // shows that input is invalid
@@ -25,12 +24,31 @@ Grabber = can.Control({
     this.toggleSaveButton(false);
   },
 
+  // enables / disables save button
   toggleSaveButton: function(on) {
     $('#grabber button.save').attr('disabled', !on);
   },
 
+  // Clears input and displays error message
+  handleWrongLink: function(message) {
+    // NOTE: For some weird reason that I couldnt figure out
+    // this is called twice sometimes, so this if statement fixes it
+    if(this.currentLink) {
+      this.clear();
+      alert(message);
+    }
+  },
+
+  // Clears input
+  clear: function() {
+    $('#grabber #grab-me').val('');
+    this.displayEmpty();
+    this.currentLink = undefined;
+  },
+
   '#grab-me keyup': function(el, e) {
     var currentInput = $(e.currentTarget).val();
+    var self = this;
 
     if(currentInput == "") {
       this.displayEmpty();
@@ -43,6 +61,13 @@ Grabber = can.Control({
     if(link.isValid()) {
       this.displayValid();
       this.currentLink = link;
+      this.currentLink.bind('change', function(ev, attr, how, newVal, oldVal) {
+        if(this.attr('embedded_link') && this.attr('name')) {
+          self.toggleSaveButton(true);
+        }
+      });
+
+      this.currentLink.fetchData();
     }
 
     // If not, display invalid glyphicon
@@ -57,10 +82,7 @@ Grabber = can.Control({
       this.currentLink.save();
       // update the view
       LinkGrabber.linkList.links.push(this.currentLink);
-      // clean up
-      this.currentLink = undefined;
     }
-    $('#grabber #grab-me').val('');
-    this.displayEmpty();
+    this.clear();
   }
 });
