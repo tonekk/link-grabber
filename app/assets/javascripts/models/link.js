@@ -51,7 +51,7 @@ Link.distributors = {
           }
         },
         error: function() {
-          LinkGrabber.grabber.handleWrongLink('Youtube API says: Not a valid youtube link!');
+          LinkGrabber.grabber.displayInvalid();
         }
       });
     }
@@ -71,7 +71,7 @@ Link.distributors = {
           LinkGrabber.grabber.currentLink.attr('name', track.title);;
         }
         else {
-          LinkGrabber.grabber.handleWrongLink('Souncloud API says: Not a valid soundcloud link!');
+          LinkGrabber.grabber.displayInvalid();
         }
       });
     },

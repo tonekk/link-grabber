@@ -29,16 +29,6 @@ Grabber = can.Control({
     $('#grabber button.save').attr('disabled', !on);
   },
 
-  // Clears input and displays error message
-  handleWrongLink: function(message) {
-    // NOTE: For some weird reason that I couldnt figure out
-    // this is called twice sometimes, so this if statement fixes it
-    if(this.currentLink) {
-      this.clear();
-      alert(message);
-    }
-  },
-
   // Clears input
   clear: function() {
     $('#grabber #grab-me').val('');
