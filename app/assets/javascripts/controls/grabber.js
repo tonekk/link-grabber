@@ -1,43 +1,50 @@
-Grabber = can.Control({
+Grabber = can.Control.extend({
   init: function(){
-    this.element.html(can.view('views/grabberView.mustache', {
-    }));
+
+    var self = this;
+
+    this.state = new can.Map({
+      disabled: 'disabled',
+      sign: 'off',
+      inputVal: ''
+    });
+
+    this.element.html(can.view('views/grabberView.mustache', this.state));
   },
 
   // shows that input is valid
   displayValid: function() {
-    $('#grabber .is-valid').removeClass('glyphicon-off glyphicon-remove')
-                            .addClass('glyphicon-ok');
+    this.state.attr('sign', 'ok');
   },
 
   // shows that input is invalid
   displayInvalid: function() {
-    $('#grabber .is-valid').removeClass('glyphicon-off glyphicon-ok')
-                            .addClass('glyphicon-remove');
+    this.state.attr('sign', 'remove');
     this.toggleSaveButton(false);
   },
 
   // shows that input is empty
   displayEmpty: function() {
-    $('#grabber .is-valid').removeClass('glyphicon-remove glyphicon-ok')
-                            .addClass('glyphicon-off');
+    this.state.attr('sign', 'off');
     this.toggleSaveButton(false);
   },
 
   // enables / disables save button
   toggleSaveButton: function(on) {
-    $('#grabber button.save').attr('disabled', !on);
+    this.state.attr('disabled', (on ? '' : 'disabled'));
   },
 
   // Clears input
   clear: function() {
-    $('#grabber #grab-me').val('');
+    this.state.attr('inputVal', '');
     this.displayEmpty();
     this.currentLink = undefined;
   },
 
   '#grab-me keyup': function(el, e) {
-    var currentInput = $(e.currentTarget).val();
+
+    this.state.attr('inputVal', $('#grab-me').val());
+    var currentInput = this.state.attr('inputVal');
     var self = this;
 
     if(currentInput == "") {

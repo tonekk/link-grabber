@@ -1,4 +1,4 @@
-LinkList = can.Control({
+LinkList = can.Control.extend({
   init: function(){
     var self = this;
     // Fetch all of the links from the db and put them into the view
@@ -8,7 +8,11 @@ LinkList = can.Control({
     });
   },
   'li.not-loaded click': function(el, e) {
-    $li = $(e.currentTarget)
+
+    // NOTE: Is it really better to use live bindings here?
+    // IMO its just making stuff really complicated
+
+    var $li = $(el);
 
     // Remove class to unbind event
     $li.removeClass('not-loaded');
@@ -26,8 +30,5 @@ LinkList = can.Control({
       $iframe.parent().fadeIn();
       $iframe.parent().parent().find('.loading-wrapper').hide();
     });
-  },
-  'iframe load': function(el, e) {
-    self.loadIframes();
   }
 });
